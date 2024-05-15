@@ -1,2 +1,1 @@
-# please-react
-PLEASE
+# React + TypeScript + Vite
