@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import CircularProgress from '@mui/material/CircularProgress';
 import axios from 'axios';
+import { Box } from '@mui/material';
+import ErrorIcon from '@mui/icons-material/Error';
 
 // Определение типов для событий истории
 interface HistoryEvent {
@@ -29,7 +32,7 @@ const HistoryList: React.FC<HistoryListProps> = ({ entityId }) => {
   const fetchHistory = async () => {
     try {
       setLoading(true);
-      const response = await axios.get<HistoryResponse>(`http://92.53.119.132:80/api/v1/history/53`);
+      const response = await axios.get<HistoryResponse>(`http://92.53.119.132:80/api/v1/history/${entityId}`);
       setHistory(response.data.history);
     } catch (err) {
       setError('Ошибка при получении истории изменений: ' + err);
@@ -41,10 +44,14 @@ const HistoryList: React.FC<HistoryListProps> = ({ entityId }) => {
   // Вызов fetchHistory при монтировании компонента
   useEffect(() => {
     fetchHistory();
-  }, [entityId]);
+  }, [entityIdd]);
 
-  if (loading) return <div>Загрузка...</div>;
-  if (error) return <div>{error}</div>;
+  if (loading) return
+  <Box sx={{ display: 'flex' }}>{loading}
+  <CircularProgress />
+  </Box>;
+  if (error) return <Box sx={{ display: 'flex' }}>
+  <ErrorIcon />{error}</Box>;
 
 
   return (
