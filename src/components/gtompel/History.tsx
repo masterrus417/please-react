@@ -32,7 +32,7 @@ const HistoryList: React.FC<HistoryListProps> = ({ entityId }) => {
   const fetchHistory = async () => {
     try {
       setLoading(true);
-      const response = await axios.get<HistoryResponse>(`http://92.53.119.132:80/api/v1/history/${entityId}`);
+      const response = await axios.get<HistoryResponse>(`http://92.53.119.132:80/api/v1/history/53`)//;${entityId}
       setHistory(response.data.history);
     } catch (err) {
       setError('Ошибка при получении истории изменений: ' + err);
@@ -44,7 +44,7 @@ const HistoryList: React.FC<HistoryListProps> = ({ entityId }) => {
   // Вызов fetchHistory при монтировании компонента
   useEffect(() => {
     fetchHistory();
-  }, [entityIdd]);
+  }, [entityId]);
 
   if (loading) return
   <Box sx={{ display: 'flex' }}>{loading}
