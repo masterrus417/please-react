@@ -14,6 +14,7 @@ import { observer } from "mobx-react-lite";
 import Page404 from './pages/Page404'
 import { createTheme } from '@mui/material/styles';
 
+
 const theme = createTheme(themeSettings());
 
 const  App:React.FC = observer(() => {
@@ -38,7 +39,7 @@ const  App:React.FC = observer(() => {
 										<Route path='/request' element={<Entitys></Entitys>}/>
 										<Route path='/candidate/:id' element={<Entity></Entity>}/>
 										<Route path='/request/:id' element={<Entity></Entity>}/>
-										<Route path='/references' element={<References entityId={0}></References>}/>
+										<Route path='/references' element={<References></References>}/>
 										<Route path='/settings' element={<Settings></Settings>}/>
 										<Route path='/user' element={<UserIFO></UserIFO>}/>
 										<Route path='*' element={<Page404></Page404>}/>
