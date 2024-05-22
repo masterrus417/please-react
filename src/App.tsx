@@ -7,6 +7,7 @@ import { BrowserRouter, Route, Routes} from 'react-router-dom';
 import Home from './pages/home';
 import Entitys from './pages/entitys';
 import Entity from './pages/entity';
+import EntityDetail from './pages/entity/EntityDetail';
 import References from './pages/references';
 import Settings from './pages/settings';
 import UserIFO from './pages/user';
@@ -38,6 +39,7 @@ const  App:React.FC = observer(() => {
 										<Route path='/request' element={<Entitys></Entitys>}/>
 										<Route path='/candidate/:id' element={<Entity></Entity>}/>
 										<Route path='/request/:id' element={<Entity></Entity>}/>
+										<Route path='/entity' element={<EntityDetail />}/>
 										<Route path='/references' element={<References></References>}/>
 										<Route path='/settings' element={<Settings></Settings>}/>
 										<Route path='/user' element={<UserIFO></UserIFO>}/>
