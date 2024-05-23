@@ -1,5 +1,6 @@
-import axios from 'axios';
 import entitiesStore from "../stores/entities-store.ts"; entitiesStore;
+import axiosInstance from "./axiosConfig.tsx";
+
 
 export type Posts = {
 	id: number
@@ -19,26 +20,5 @@ export type entityTypes = {
 }
 
 
-// токен для авторизации
-const token: string = "token 53f6b053dcd4f7f39471b0910f0e22fcc2fd36d3";
-// урла для получения жсона
-const baseURL = 'http://92.53.119.132/api/v1/entity/';
-
-
-export async function getEntities(entityType:string) {
-
-	const axiosConfig = {
-		method: 'get',
-		baseURL: baseURL,
-		url: `/${entityType}/type`,
-		headers: {'Authorization': token}
-	}
-
-	try {
-		const response = await axios(axiosConfig)
-		return response.data;
-	}
-	catch (error) {
-	};
-
-}
+export const getEntities = async (entityType:string) =>
+	(await axiosInstance.get(`v1/entity/${entityType}/type`)).data;

@@ -1,5 +1,4 @@
-import axios from 'axios';
-
+import axiosInstance from "./axiosConfig.tsx";
 
 export type ChoiceValue = {
 	rattr_dict_no : number
@@ -22,32 +21,6 @@ export type CustomFilter = {
 	rentity_filter_attr: FilterRattrItem[]
 };
 
-// export const getFilter = async (rentity_filter_name:string) =>
-// 	(await axios.get<CustomFilter[]>(`http://localhost:8000/api/v2/filter/${rentity_filter_name}`)).data;
+export const getFilter = async (entityType:string) =>
+	(await axiosInstance.get(`v1/filter/${entityType}_list`)).data;
 
-
-
-// токен для авторизации
-const token: string = "token 53f6b053dcd4f7f39471b0910f0e22fcc2fd36d3";
-// урла для получения жсона
-const baseURL = 'http://92.53.119.132/api/v1/filter/';
-
-export async function getFilter(entityType:string) {
-
-	const axiosConfig = {
-		method: 'get',
-		baseURL: baseURL,
-		url: `/${entityType}_list`,
-		headers: {'Authorization': token}
-	}
-
-	try {
-		const response = await axios(axiosConfig)
-		return response.data;
-	}
-
-	catch (error) {
-	};
-
-
-}
