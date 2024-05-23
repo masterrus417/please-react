@@ -6,22 +6,32 @@ import { fromPromise, IPromiseBasedObservable } from 'mobx-utils';
 class FilterStore {
 	filter?: IPromiseBasedObservable<CustomFilter[]>|null;
     isLoading: boolean = false;
-
-
+	filters = [];
+	opened: boolean = false;
 
     constructor() {
 		makeAutoObservable(this);
 	}
 
+
 	getFilterAction = (rentity_filter_name:string) => {
-		this.filter = fromPromise(getFilter(rentity_filter_name))	
+		this.filter = fromPromise(getFilter(rentity_filter_name))
 	}
 
 	clearFilterAction = () => {
 		this.filter = undefined
 	}
 
+	setFilters(newFilters) {
+		this.filters = newFilters;
+	}
+
+	setOpenedFilter() {
+		this.opened = !this.opened;
+	}
 
 }
 
-export default new FilterStore();
+const filterStore = new FilterStore();
+
+export default filterStore;
