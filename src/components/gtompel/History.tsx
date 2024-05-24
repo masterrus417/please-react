@@ -4,6 +4,7 @@ import axios from 'axios';
 import { Box } from '@mui/material';
 import ErrorIcon from '@mui/icons-material/Error';
 
+
 // Определение типов для событий истории
 interface HistoryEvent {
   event_type: string;
