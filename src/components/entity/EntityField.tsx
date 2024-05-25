@@ -1,5 +1,5 @@
 import { TextField, FormControlLabel, Checkbox } from '@mui/material';
-import { dateToMUI } from '../../utils/utils';
+import { dateToMUI, MUIToDate } from '../../utils/utils';
 import { useStores } from '../../context/root-store-general-context';
 import { EntityAttribute } from '../../api/getEntity';
 
@@ -33,6 +33,7 @@ export default function EntityField ({attribute} : Props) {
           defaultValue={dateToMUI(entityAttrValue)}
           name={rattrName}
           InputLabelProps={{ shrink: true }}
+          onChange={(e)=>Entity.updateEntityAttribute(e.target.name, MUIToDate(e.target.value))}
         />
       );
       break;
@@ -58,7 +59,7 @@ export default function EntityField ({attribute} : Props) {
           maxRows={4}
           size='small'
           variant='standard'
-          sx={{ m: 2 }}
+          sx={{ m: 2, maxWidth: "95%" }}
           helperText={rAttrLabel}
           defaultValue={entityAttrValue}
           InputProps={readOnly}

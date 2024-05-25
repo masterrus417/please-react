@@ -1,26 +1,33 @@
 import { observer } from "mobx-react-lite";
 import { useStores } from '../../context/root-store-general-context';
-import { Box, Grid, Typography, Button, Divider } from "@mui/material";
+import { Box, Grid, Typography, Button, Divider, Stack } from "@mui/material";
 import EntityDetailBody from "../../components/entity/EntityDetailBody";
 import LinkCard from "../../components/entity/LinkCard";
 import EntityAction from "../../components/entity/EntityAction.tsx";
+import LinkSelector from "../../components/entity/LinkSelector.tsx";
 import { useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import IconButton from '@mui/material/IconButton';
 import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
+import Alert from '@mui/material/Alert';
 
 
 const EntityDetail = observer(() => {
 
   const [ newLink, setNewLink ] = useState("close");
-  
+  const [ newLinkType, setNewLinkType ] = useState(null);
 
   const { state } = useLocation();
   const rEntityTypeName = state?.type;
   const entityID = state?.id;
 
   const { Entity } = useStores();
-    
+
+  function openLinkSelector(linkType: string) {
+    setNewLinkType(linkType);
+    setNewLink("select");
+  };
+
   useEffect(()=>{
       setNewLink("close");
       Entity.getEntityAction(rEntityTypeName, entityID);
@@ -45,23 +52,30 @@ const EntityDetail = observer(() => {
               <Grid item xs={3}>
                 <Box height={"70vh"}>
                   <Box sx={{ display: "flex"}}>
-                    <Typography sx={{mb: 2, ml: 2}} variant="h5" component="h2">Связаные карточки</Typography>
-                    <IconButton aria-label="new link" size="small" sx={{m: "0 auto auto auto"}} onClick={()=>setNewLink("type")}>
-                      <AddCircleOutlineOutlinedIcon fontSize="inherit" color="action"/>
-                    </IconButton>
+                    <Stack direction="row">
+                      <Typography sx={{mb: 2, ml: 2, mt: 2}} variant="h5" component="h2">Связаные карточки</Typography>
+                      <IconButton aria-label="new link" size="large" sx={{ m: "auto auto auto 0"}} onClick={()=>setNewLink("type")}>
+                        <AddCircleOutlineOutlinedIcon fontSize="inherit" color="action"/>
+                      </IconButton>
+                    </Stack>
                   </Box>
-                  <Box sx={{ overflowY: "auto"}}>
+                  <Box sx={{ overflowY: "auto"}} height={"70vh"}>
                     {
-                      newLink === "type" && <>
+                      newLink === "type" &&
+                      <>
                         <Typography variant="h6">Выберите тип связи</Typography>
-                          <Button >Добавить кандидата</Button>
-                          <Button>Добавить заявку</Button>
-                          <Button onClick={()=>{setNewLink("close")}}>Отмена</Button>
+                        <Stack sx={{ mx: 2, mt: 2 }} spacing={1}>
+                          <Button variant="outlined" onClick={()=>openLinkSelector("candidate")}>Связать с кандидатом</Button>
+                          <Button variant="outlined" onClick={()=>openLinkSelector("request")}>Связать с заявкой</Button>
+                          <Button sx={{ mt: 2 }} variant="outlined" color="secondary" onClick={()=>setNewLink("close")}>Отмена</Button>
+                        </Stack>
                       </>
                     }
-                    {newLink === "close" && !!Entity.links && <Button>Links not found</Button>}
-                    <LinkCard attribute={{ entity_id: 40, rentity_type_label: "Заявка", rentity_type_name: "request" }}/>
-                    <LinkCard attribute={{ entity_id: 87, rentity_type_label: "Кандидат", rentity_type_name: "candidate" }}/>
+                    {newLink === "select" && <LinkSelector linkType={newLinkType}/>}
+                    {newLink === "close" && Entity.links.length == 0 && <Alert severity="info">Связи отсутствуют</Alert>}
+                    {newLink === "close" && Entity.links.length > 0 && Entity.links.map((ent)=>
+                      <LinkCard entity={ent} key={ent.entity_id}/>
+                    )}
                   </Box>
                 </Box>
               </Grid>

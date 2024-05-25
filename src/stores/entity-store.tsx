@@ -1,7 +1,7 @@
 import { makeAutoObservable } from 'mobx';
 
 import { Entity, getEntity } from '../api/getEntity';
-import { getEntityLinks } from '../api/getEntityLinks';
+import { getEntityLinks, EntityLink } from '../api/getEntityLinks';
 import { updateEntity } from '../api/updateEntity';
 
 class EntityStore {
@@ -9,7 +9,7 @@ class EntityStore {
 	links?: Entity[];
     isLoading: boolean = false;
 	isChange: boolean = false;
-	state: "loading" | "done" | "error" | "empty" = "empty";
+	state: "loading"|"done"|"error"|"empty" = "empty";
 
 
     constructor() {
@@ -24,8 +24,9 @@ class EntityStore {
 				getEntityLinks(entityType, entityID)
 			]
 		);
+		let links = cur_entity_links.map((ent: EntityLink)=>ent.entity_link[0])
 		this.setEntity(cur_entity);
-		this.setLinks(cur_entity_links);
+		this.setLinks(links);
 		this.setState("done");
 	}
 
@@ -51,6 +52,7 @@ class EntityStore {
 		const attrIndex = this.entity?.entity_attr.findIndex(elem=>elem.rattr_name == rattrName) as number;
 		if (this.entity){
 			this.entity.entity_attr[attrIndex].entity_attr_value = entityAttrValue;
+			console.log('Save: ', entityAttrValue)
 			this.setIsChange();
 		};
 	}
