@@ -18,6 +18,7 @@ import {
     Grid,
     TextField,
     TablePagination,
+    Paper,
 } from "@mui/material";
 
 import {getEntities} from "../api/getEntities.tsx";
@@ -32,6 +33,30 @@ import paginationStore from "../stores/pagination-store.ts";
 type props = {
     rentity_type_name: string;
 }
+
+const styles = {
+    root: {
+        width: '100%',
+        position: 'relative',
+    },
+    buttons: {
+        display: 'flex',
+        justifyContent: 'space-between',
+        padding: '10px'
+    },
+    buttonNew: {
+       marginLeft: 'auto',
+    },
+    container: {
+        maxHeight: '85vh',
+    },
+    pagination: {
+        height: '5vh',
+        display: 'flex',
+        justifyContent: 'center',
+        borderBottom: 'none'
+    },
+};
 
 
 const Entities:React.FC<props> = observer((props) => {
@@ -118,7 +143,7 @@ const Entities:React.FC<props> = observer((props) => {
     }
 
     return (
-        <div style={{ display: 'flex', flexDirection: 'column', height: '90vh' }}>
+        <div style={styles.root}>
             <Dialog open={opened} onClose={handleCloseDialog} fullWidth>
                 <DialogTitle>Укажите необходимые данные для фильтрации </DialogTitle>
                     {filters.map((item:any, index:number) => {
@@ -143,99 +168,108 @@ const Entities:React.FC<props> = observer((props) => {
                 </DialogActions>
             </Dialog>
 
-            <div style={{ display: 'flex', justifyContent: 'space-between', padding: '10px' }}>
+            <div style={styles.buttons}>
                 <div>
                     <Button onClick={handleOpenDialog}>Фильтрация</Button>
                     <Button>Сбросить фильтры</Button>
                 </div>
                 <Button variant="contained"
                         color="primary"
-                        style={{ marginLeft: 'auto' }}
+                        style={styles.buttonNew}
                         onClick={handleEntityNew}>
                     Добавить
                 </Button>
             </div>
 
-            <TableContainer style={{ flex: 1, overflowY: 'auto' }}>
+            <div>
+                <TableContainer component={Paper} style={styles.container}>
+                    <Table stickyHeader>
+                        <TableHead>
 
-                <Table stickyHeader style={{ width: '100%', borderCollapse: 'collapse' }}>
+                            {entities.map((item:any, index:number) => {
+                                if (item.entity_id === 41 && entityListType === 'candidate') { // костыль, при одинаковых жсонах убрать условие полностью
+                                    return (
+                                        <TableRow key={index}>
+                                            {item.entity_attr.map((item:any, index:number) => {
+                                                if (item.rattr_view === true) {return (<TableCell key={index}>{item.rattr_label}</TableCell>)}
+                                            })}
+                                            <TableCell></TableCell>
+                                            <TableCell></TableCell>
+                                        </TableRow>
+                                    )
+                                }
 
-                    <TableHead>
-                        {entities.map((item:any, index:number) => {
-                            if (item.entity_id === 41 && entityListType === 'candidate') { // костыль, при одинаковых жсонах убрать условие полностью
-                                return (
-                                    <TableRow key={index}>
-                                        {item.entity_attr.map((item:any, index:number) => {
-                                            if (item.rattr_view === true) {return (<TableCell key={index}>{item.rattr_label}</TableCell>)}
-                                        })}
-                                        <TableCell></TableCell>
-                                        <TableCell></TableCell>
-                                    </TableRow>
-                                )
-                            }
+                                else if (item.entity_id === 86 && entityListType === 'request') { // костыль, при одинаковых жсонах убрать условие полностью
+                                    return (
+                                        <TableRow key={index}>
+                                            {item.entity_attr.map((item:any, index:number) => {
+                                                if (item.rattr_view === true) {return (<TableCell key={index}>{item.rattr_label}</TableCell>)}
+                                            })}
+                                            <TableCell></TableCell>
+                                            <TableCell></TableCell>
+                                        </TableRow>
+                                    )
+                                }
+                            })}
 
-                            else if (item.entity_id === 86 && entityListType === 'request') { // костыль, при одинаковых жсонах убрать условие полностью
-                                return (
-                                    <TableRow key={index}>
-                                        {item.entity_attr.map((item:any, index:number) => {
-                                            if (item.rattr_view === true) {return (<TableCell key={index}>{item.rattr_label}</TableCell>)}
-                                        })}
-                                        <TableCell></TableCell>
-                                        <TableCell></TableCell>
-                                    </TableRow>
-                                )
-                            }
-                        })}
-                    </TableHead>
+                        </TableHead>
 
+                        <TableBody>
+
+                                {(rowsPerPage > 0
+                                        ? entities.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                                        : entities
+                                    ).map((item:any, index:number) => (
+
+                                        <TableRow key={index}>
+                                            {item.entity_attr.map((item:any, index:number) => {
+                                                if (item.rattr_view === true) {
+                                                    return (
+                                                        <TableCell key={index}>{item.entity_attr_value}</TableCell>
+                                                    )
+                                                }
+                                            })}
+
+                                            {item.current_stage.map((item:any, index:number) => {
+                                                if (true === true) {
+                                                    return (
+                                                        <TableCell key={index}>{item.entity_attr_value}</TableCell>
+                                                    )
+                                                }
+                                            })}
+
+                                            <TableCell><Button onClick={() => handleEntityDetailsOpen(item.entity_id)}>Подробнее</Button></TableCell>
+                                            {(entityListType === 'candidate' && (<TableCell><Button onClick={() => handleEntityStagesOpen(item.entity_id)}>Этапы</Button></TableCell>))}
+
+                                        </TableRow>
+                                    ))}
+
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+            </div>
+
+            <div style={styles.pagination}>
+                <Table>
                     <TableBody>
-                            {(rowsPerPage > 0
-                                    ? entities.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                                    : entities
-                                ).map((item:any, index:number) => (
-(
-                                <TableRow key={index}>
-                                    {item.entity_attr.map((item:any, index:number) => {
-                                        if (item.rattr_view === true) {
-                                            return (
-                                                <TableCell key={index}>{item.entity_attr_value}</TableCell>
-                                            )
-                                        }
-                                    })}
-
-                                    {item.current_stage.map((item:any, index:number) => {
-                                        if (true === true) {
-                                            return (
-                                                <TableCell key={index}>{item.entity_attr_value}</TableCell>
-                                            )
-                                        }
-                                    })}
-
-                                    <TableCell><Button onClick={() => handleEntityDetailsOpen(item.entity_id)}>Подробнее</Button></TableCell>
-                                    {(entityListType === 'candidate' && (<TableCell><Button onClick={() => handleEntityStagesOpen(item.entity_id)}>Этапы</Button></TableCell>))}
-
-                                </TableRow>
-                            )))}
-
+                        <TableRow>
+                            {entities.length > 0 && (
+                                <TablePagination
+                                    rowsPerPageOptions={rowsPerPageOptions}
+                                    colSpan={4}
+                                    count={entities.length}
+                                    rowsPerPage={rowsPerPage}
+                                    page={page}
+                                    onPageChange={handleChangePage}
+                                    onRowsPerPageChange={handleChangeRowsPerPage}
+                                    labelRowsPerPage="Количество строк" // Меняет "Rows per page" на кастомный
+                                    labelDisplayedRows={({ from, to, count}) => `Строки ${from} - ${to} из ${count}`}   // штука меняет дефолтный бар "1-10 of 20" на кастомный, можно даже изменить наполненность
+                                />
+                            )}
+                        </TableRow>
                     </TableBody>
-
                 </Table>
-
-            </TableContainer>
-
-            {entities.length > 0 && (
-                <TablePagination
-                    rowsPerPageOptions={rowsPerPageOptions}
-                    colSpan={4}
-                    count={entities.length}
-                    rowsPerPage={rowsPerPage}
-                    page={page}
-                    onPageChange={handleChangePage}
-                    onRowsPerPageChange={handleChangeRowsPerPage}
-                    labelRowsPerPage="Количество строк" // Меняет "Rows per page" на кастомный
-                    labelDisplayedRows={({ from, to, count}) => `Строки ${from} - ${to} из ${count}`}   // штука меняет дефолтный бар "1-10 of 20" на кастомный, можно даже изменить наполненность
-                />
-            )}
+            </div>
         </div>
     );
 });

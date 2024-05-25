@@ -3,7 +3,7 @@ import { makeAutoObservable } from 'mobx';
 
 class PaginationStore {
     rowsPerPageOptions:number[] = [10, 25, 50];
-    rowsPerPage:number = 10;
+    rowsPerPage:number = 25;
     page:number = 0;
 
     constructor() {
