@@ -123,7 +123,6 @@ const Entities:React.FC<props> = observer((props) => {
 
     // закрытие диалога для фильтров
     const handleCloseDialog = () => {
-        // setOpen(false);
         filterStore.setOpenedFilter();
     }
 
