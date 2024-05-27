@@ -3,6 +3,7 @@ import { makeAutoObservable } from 'mobx';
 
 class EntitiesStore {
     entities = [];
+    loading: boolean = false;
 
     constructor() {
         makeAutoObservable(this);
@@ -10,8 +11,14 @@ class EntitiesStore {
 
     setData(newEntities) {
         this.entities = newEntities;
+        this.loading = false;
+    }
+
+    setLoading() {
+        this.loading = true;
     }
 }
+
 
 const entitiesStore = new EntitiesStore()
 

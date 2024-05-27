@@ -1,10 +1,10 @@
 import { makeAutoObservable} from 'mobx';
 
-import { CustomFilter, getFilter } from '../api/getFilters';
+import { Filter, getFilter } from '../api/getFilters';
 import { fromPromise, IPromiseBasedObservable } from 'mobx-utils';
 
 class FilterStore {
-	filter?: IPromiseBasedObservable<CustomFilter[]>|null;
+	filter?: IPromiseBasedObservable<Filter[]>|null;
     isLoading: boolean = false;
 	filters = [];
 	opened: boolean = false;
