@@ -6,6 +6,7 @@ import ConfirmDialog from '../../modal/Confirm'
 import { useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useStores } from '../../context/root-store-general-context';
+import { useNavigate } from 'react-router-dom';
 
 
 type Props = {
@@ -16,6 +17,7 @@ type Props = {
 }
 
 export default function EntityAction({entityID, rentityTypeName , handleDelete, handleSave}: Props) {
+  const navigate = useNavigate();
 
   const { Entity } = useStores();
 
@@ -34,7 +36,13 @@ export default function EntityAction({entityID, rentityTypeName , handleDelete, 
 
   function deleteEntity() {
     setShowConfirmDelete(false);
-    handleDelete(entityID);
+    handleDelete(entityID)
+      .then(()=>{
+        console.log("Delete Success");
+        return navigate("/");
+      })
+      .catch(()=>console.log("Delete ERROR"));
+    ;
   };
   
   function saveEntity() {

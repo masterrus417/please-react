@@ -1,4 +1,5 @@
-import axiosInstance from "./axiosConfig";
+import axiosInstance from "./axiosConfig.tsx";
+
 
 export type EntityAttribute = {
   entity_attr_id: number,
@@ -30,5 +31,7 @@ export type Entity = {
 	entity_attr: EntityAttribute[]
 };
 
-export const getEntity = async (entityType: string, entityID: number) =>
-  (await axiosInstance.get(`api/v1/entity/${entityType}/${entityID}`)).data[0]
+
+
+export const getEntities = async (entityType:string) =>
+  (await axiosInstance.get<Entity[]>(`api/v1/entity/${entityType}/type`)).data
