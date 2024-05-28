@@ -15,7 +15,6 @@ import Alert from '@mui/material/Alert';
 
 const EntityDetail = observer(() => {
 
-  // const [ newLink, setNewLink ] = useState("close");
   const [ newLinkType, setNewLinkType ] = useState(null);
 
   const { state } = useLocation();
@@ -23,7 +22,7 @@ const EntityDetail = observer(() => {
   const entityID = state?.id;
 
   const { Entity } = useStores();
-  const { Entities } = useStores();
+  const { Entities, SideBar } = useStores();
 
   function openLinkSelector(linkType: string) {
     setNewLinkType(linkType);
@@ -31,13 +30,25 @@ const EntityDetail = observer(() => {
   };
 
   useEffect(()=>{
-      Entity.setLinksState("close");
-      Entity.getEntityAction(rEntityTypeName, entityID);
+    Entity.setLinksState("close");
+    Entity.getEntityAction(rEntityTypeName, entityID);
   },[state]);
 
+  useEffect(()=>{
+    let selectedIndex = SideBar.selectedIndex;
+    if (Entity.state === "done") {
+      if (Entity.entity.rentity_type_name === 'candidate') {
+        selectedIndex = 2;
+      } else if (Entity.entity.rentity_type_name === 'request') {
+        selectedIndex = 3;
+      }
+    }
+    SideBar.setSelectedIndexAction(selectedIndex);
+  }, [Entity.state]
+  )
+
   return (
-    Entity.entity ? 
-      (<>
+      <>
         {Entity.state === "loading" && (<Box>Получение данных...</Box>)}
         {Entity.state === "done" && (
           <Box sx={{ flexGrow: 1 }}>
@@ -90,13 +101,10 @@ const EntityDetail = observer(() => {
             />
           </Box>
         )}
-        {Entity.state === "error" && (<Box>Ошибка загрузки</Box>)}</>):
-        (
-        <Box>
-            <Typography>Данных нет</Typography>
-        </Box>
-        )
-  )
+        {Entity.state === "error" && (<Box>Ошибка загрузки</Box>)}
+      </>)
+
+  
 });
 
 export default EntityDetail;

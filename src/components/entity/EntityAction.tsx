@@ -1,7 +1,7 @@
 import SpeedDial from '@mui/material/SpeedDial';
 import SpeedDialIcon from '@mui/material/SpeedDialIcon';
 import SpeedDialAction from '@mui/material/SpeedDialAction';
-import { Save, Delete, List } from '@mui/icons-material/';
+import { Save, Delete, List, History } from '@mui/icons-material/';
 import ConfirmDialog from '../../modal/Confirm'
 import { useState } from 'react';
 import { createPortal } from 'react-dom';
@@ -30,7 +30,8 @@ export default function EntityAction({entityID, handleDelete, handleSave}: Props
   const actions = [
     { icon: <Delete />, name: 'Удалить', key: 'delete', mb: 0, action: handleDeleteButton },
     { icon: <Save />, name: 'Сохранить', key: 'save', mb: 0, action: saveEntity },
-    { icon: <List />, name: 'К списку', key: 'list', mb: 2, action: goToEntityList },
+    { icon: <History />, name: 'История', key: 'history', mb: 2, action: openHistory },
+    { icon: <List />, name: 'К списку', key: 'list', mb: 0, action: goToEntityList },
   ];
 
   function deleteEntity() {
@@ -49,6 +50,11 @@ export default function EntityAction({entityID, handleDelete, handleSave}: Props
     console.log(Entity.entity?.entity_id);
   };
 
+  function openHistory() {
+    console.log(`Entity ${Entity.entity.entity_id}: open history`);
+    // TODO return navigate(`/${Entity.entity.rentity_type_name}`);
+  };
+
   function goToEntityList() {
     return navigate(`/${Entity.entity.rentity_type_name}`);
   };
@@ -61,7 +67,7 @@ export default function EntityAction({entityID, handleDelete, handleSave}: Props
         onOpen={()=>{setShowSpeedDeal(true)}}
         open={showSpeedDeal}
         ariaLabel='Entities'
-        sx={{ position: 'absolute', bottom: 16, right: 16 }}
+        sx={{ position: 'fixed', bottom: 16, right: 16 }}
         icon={<SpeedDialIcon />}
       >
         {actions.map((action) => (
