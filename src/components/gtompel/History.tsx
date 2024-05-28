@@ -33,7 +33,7 @@ const HistoryList: React.FC<HistoryListProps> = ({ entityId }) => {
   const fetchHistory = async () => {
     try {
       setLoading(true);
-      const response = await axios.get<HistoryResponse>(`http://92.53.119.132:80/api/v1/history/53`)//;${entityId}
+      const response = await axios.get<HistoryResponse>(`http://92.53.119.132:80/api/v1/history/${entityId}`); // 53 - id сущности
       setHistory(response.data.history);
     } catch (err) {
       setError('Ошибка при получении истории изменений: ' + err);
