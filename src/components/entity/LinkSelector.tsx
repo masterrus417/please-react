@@ -30,11 +30,11 @@ export default function LinkSelector({setNewLink, linkType, entitiesState, handl
       {selectorState === "done" &&
         <>
           <Stack>
-            <Typography variant="h6">Выберите карточку для связи</Typography>
+            <Typography variant="h6" sx={{ mx: 1 }}>Выберите карточку для связи</Typography>
             <List sx={{ overflowY:"auto", maxHeight: "50vh", my: 1 }}>
               {entityList.map((entity)=> {
                 return (
-                  <Card key={entity.entity_id} sx={{ width: "90%", m: 1 }}>
+                  <Card key={entity.entity_id} sx={{ width: "90%", my: 1, mb: "auto" }}>
                   <ListItem >
                     <Stack direction="row">
                       <IconButton color="primary" onClick={()=>handleAddEntityLink(Entity.entity.entity_id, entity.entity_id)}>
@@ -51,7 +51,7 @@ export default function LinkSelector({setNewLink, linkType, entitiesState, handl
                 )
               })}
             </List>
-            <Button variant="outlined" onClick={()=>setNewLink("close")} color="secondary">Отмена</Button>
+            <Button variant="outlined" sx={{ mx: 2 }} onClick={()=>setNewLink("close")} color="secondary">Отмена</Button>
           </Stack>
         </>
       }

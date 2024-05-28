@@ -24,7 +24,7 @@ class EntityStore {
 		this.setState("loading");
 		const [ cur_entity, cur_entity_links ] = await Promise.all(
 			[
-				getEntity(entityType, entityID),
+				getEntity(entityID),
 				getEntityLinks(entityType, entityID)
 			]
 		);

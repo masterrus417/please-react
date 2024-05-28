@@ -22,7 +22,7 @@ export default function LinkCard ({entityId, link, deleteEntityLink}: Props) {
   };
 
   return (
-    <Card sx={{ width: "90%", m: 1 }} onDoubleClick={openEntity}>
+    <Card sx={{ width: "90%", my: 1, mx: "auto" }} onDoubleClick={openEntity}>
       <CardContent sx={{ p: 1 }}>
         <Typography sx={{ fontSize: 14, mb: 1 }} color="text.secondary" gutterBottom>
           {link?.entity_id} - {link?.rentity_type_label}

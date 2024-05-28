@@ -11,12 +11,11 @@ import { useNavigate } from 'react-router-dom';
 
 type Props = {
   entityID: number,
-  rentityTypeName: string,
   handleDelete: Function,
   handleSave: Function
 }
 
-export default function EntityAction({entityID, rentityTypeName , handleDelete, handleSave}: Props) {
+export default function EntityAction({entityID, handleDelete, handleSave}: Props) {
   const navigate = useNavigate();
 
   const { Entity } = useStores();
@@ -39,7 +38,7 @@ export default function EntityAction({entityID, rentityTypeName , handleDelete, 
     handleDelete(entityID)
       .then(()=>{
         console.log("Delete Success");
-        return navigate("/");
+        return navigate(`/${Entity.entity.rentity_type_name}`);
       })
       .catch(()=>console.log("Delete ERROR"));
     ;
@@ -51,7 +50,7 @@ export default function EntityAction({entityID, rentityTypeName , handleDelete, 
   };
 
   function goToEntityList() {
-    console.log(rentityTypeName);
+    return navigate(`/${Entity.entity.rentity_type_name}`);
   };
 
   return (

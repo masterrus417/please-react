@@ -42,17 +42,17 @@ const EntityDetail = observer(() => {
         {Entity.state === "done" && (
           <Box sx={{ flexGrow: 1 }}>
             <Grid container spacing={2}>
-              <Grid item xs={12}>
+              <Grid item lg={12} sm={12}>
                 <Typography sx={{m: 2}} variant="h4" component="h1">{Entity.entity.rentity_type_label}</Typography>
                 <Divider />
               </Grid>
-              <Grid item xs={9}>
-                <Paper>
-                  <EntityDetailBody entity={Entity.entity}/>
+              <Grid item sm={12} lg={9} >
+                <Paper sx={{ height: "75vh", overflowY: "auto" }}>
+                    <EntityDetailBody entity={Entity.entity}/>
                 </Paper>
               </Grid>
-              <Grid item xs={3}>
-                <Box height={"70vh"}>
+              <Grid item lg={3} sm={12}>
+                <Paper sx={{ height: "75vh" }}>
                   <Box sx={{ display: "flex"}}>
                     <Stack direction="row">
                       <Typography sx={{mb: 2, ml: 2, mt: 2}} variant="h5" component="h2">Связаные карточки</Typography>
@@ -61,7 +61,7 @@ const EntityDetail = observer(() => {
                       </IconButton>
                     </Stack>
                   </Box>
-                  <Box sx={{ overflowY: "auto"}} height={"70vh"}>
+                  <Box sx={{ overflowY: "auto"}} height={"65vh"}>
                     {
                       Entity.linksState === "type" &&
                       <>
@@ -80,12 +80,11 @@ const EntityDetail = observer(() => {
                     )}
                     {Entity.linksState === "loading" && <LinkPlaceholder />}
                   </Box>
-                </Box>
+                </Paper>
               </Grid>
             </Grid>
             <EntityAction
               entityID={entityID}
-              rentityTypeName={rEntityTypeName}
               handleDelete={Entity.deleteEntityAction}
               handleSave={Entity.updateEntityAction}
             />

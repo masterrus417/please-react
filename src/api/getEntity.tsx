@@ -30,5 +30,5 @@ export type Entity = {
 	entity_attr: EntityAttribute[]
 };
 
-export const getEntity = async (entityType: string, entityID: number) =>
-  (await axiosInstance.get(`api/v1/entity/${entityType}/${entityID}`)).data[0]
+export const getEntity = async (entityID: number) =>
+  (await axiosInstance.get(`api/v1/entity/${entityID}`)).data[0]
