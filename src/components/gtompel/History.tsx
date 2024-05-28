@@ -3,6 +3,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import axios from 'axios';
 import { Box } from '@mui/material';
 import ErrorIcon from '@mui/icons-material/Error';
+import { List, ListItem, ListItemText, Typography } from '@mui/material';
 
 
 // Определение типов для событий истории
@@ -57,14 +58,19 @@ const HistoryList: React.FC<HistoryListProps> = ({ entityId }) => {
 
   return (
     <div>
-      <h3>История изменений:</h3>
-      <ul>
+      <Typography variant="h6" gutterBottom>
+        История изменений:
+      </Typography>
+      <List>
         {history.map((event, index) => (
-          <li key={index}>
-            {`${event.event_type_name}: ${event.event_description} (Дата: ${event.event_date})`}
-          </li>
+          <ListItem key={index} divider>
+            <ListItemText
+              primary={`${event.event_type_name}: ${event.event_description}`}
+              secondary={`Дата: ${event.event_date}`}
+            />
+          </ListItem>
         ))}
-      </ul>
+      </List>
     </div>
   );
 };
