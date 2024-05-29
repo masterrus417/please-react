@@ -37,7 +37,7 @@ const HistoryList: React.FC<HistoryListProps> = ({ entityId }) => {
       const response = await axios.get<HistoryResponse>(`http://92.53.119.132:80/api/v1/history/${entityId}`); // 53 - id сущности
       setHistory(response.data.history);
     } catch (err) {
-      setError('Ошибка при получении истории изменений: ' + err);
+      setError('Ошибка при получении истории изменений: +' + err);
     } finally {
       setLoading(false);
     }
@@ -48,20 +48,32 @@ const HistoryList: React.FC<HistoryListProps> = ({ entityId }) => {
     fetchHistory();
   }, [entityId]);
 
-  if (loading) return
-  <Box sx={{ display: 'flex' }}>{loading}
-  <CircularProgress />
-  </Box>;
-  if (error) return <Box sx={{ display: 'flex' }}>
+  if (loading)
+  return
+    <Box sx={{ display: 'flex' }}>{loading}
+      <CircularProgress
+        color="primary"
+        size="lg"
+        value={50}/>
+    </Box>;
+  if (error)
+  return
+  <Box sx={{ display: 'flex' }}>
   <ErrorIcon />{error}</Box>;
 
 
   return (
-    <div>
-      <Typography variant="h6" gutterBottom>
-        История изменений:
-      </Typography>
-      <List>
+  <Box
+      sx={{ width: '100%', bgcolor: 'background.paper' }}>
+    <Typography
+      fontWeight={"bold"}
+      sx={{paddingLeft:"8px"}}
+      variant='h5'
+      gutterBottom={true}>
+        История изменений по сущности {entityId}:
+    </Typography>
+  <List
+      sx={{ width: '100%', bgcolor: 'background.paper' }}>
         {history.map((event, index) => (
           <ListItem key={index} divider>
             <ListItemText
@@ -70,8 +82,8 @@ const HistoryList: React.FC<HistoryListProps> = ({ entityId }) => {
             />
           </ListItem>
         ))}
-      </List>
-    </div>
+ </List>
+    </Box>
   );
 };
 
