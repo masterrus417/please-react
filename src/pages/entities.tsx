@@ -293,7 +293,7 @@ const Entities:React.FC<props> = observer((props) => {
                                                         })}
                                                     </TableCell>
                                                     <TableCell><Button onClick={() => handleEntityDetailsOpen(item.entity_id)}>Подробнее</Button></TableCell>
-                                                    {(entityListType === 'candidate' && (<TableCell><Button onClick={() => handleEntityStagesOpen(item.entity_id)}>Этапы</Button></TableCell>))}
+                                                    <TableCell><Button onClick={() => handleEntityStagesOpen(item.entity_id)}>Этапы</Button></TableCell>
 
                                                 </TableRow>
                                             ))}
