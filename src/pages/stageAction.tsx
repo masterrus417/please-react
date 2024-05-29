@@ -8,6 +8,7 @@ import EntityCard from "../components/stages/entityCard.tsx";
 import {StageActions} from "../types/entityStage.ts";
 import {Entity} from "../types/entity.ts";
 import {useLocation} from "react-router-dom";
+import InternalServerErrorPage from "./500.tsx";
 
 const stageAction: React.FC = observer(({}) => {
 
@@ -19,6 +20,8 @@ const stageAction: React.FC = observer(({}) => {
         useState<Entity | null>(null);
     const [checkboxes, setCheckboxes] =
         useState<Entity[] | null>(null);
+    const [error, setError] =
+        useState<boolean>(false);
 
     const getData = async () => {
         const entity = await getEntityByID(state.id);
@@ -28,7 +31,7 @@ const stageAction: React.FC = observer(({}) => {
         const fields: Entity[] = [];
         for (let action of actions) {
             await getEntityByID(action.entity_stage_entity_id).then((r: Entity[]) => {
-                for (let x of r){
+                for (let x of r) {
                     fields.push(x);
                 }
             });
@@ -37,26 +40,33 @@ const stageAction: React.FC = observer(({}) => {
     };
 
     useEffect(() => {
-        getData();
+        getData()
+            .catch((_e) => setError(true));
     }, []);
 
     // JSX
     return (
-        <Grid container spacing={2} style={{padding: '1rem'}}>
+        <>
             {
-                currentEntity != null && currentActions != null && checkboxes != null ?
-                    <Grid item xs={12}>
-                        <EntityCard
-                            entity={currentEntity}
-                            actions={currentActions}
-                            checkboxes={checkboxes}
-                            getData={getData}
-                        />
-                    </Grid>
+                error ?
+                    <InternalServerErrorPage/> :
+                    <Grid container spacing={2} style={{padding: '1rem'}}>
+                        {
+                            currentEntity != null && currentActions != null && checkboxes != null ?
+                                <Grid item xs={12}>
+                                    <EntityCard
+                                        entity={currentEntity}
+                                        actions={currentActions}
+                                        checkboxes={checkboxes}
+                                        getData={getData}
+                                    />
+                                </Grid>
 
-                    : null
+                                : null
+                        }
+                    </Grid>
             }
-        </Grid>
+        </>
     );
 })
 
