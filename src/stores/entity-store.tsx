@@ -22,16 +22,24 @@ class EntityStore {
 
 	getEntityAction = async (entityType: string, entityID: number) => {
 		this.setState("loading");
-		const [ cur_entity, cur_entity_links ] = await Promise.all(
+		try {
+			const [ cur_entity, cur_entity_links ] = await Promise.all(
 			[
 				getEntity(entityID),
 				getEntityLinks(entityType, entityID)
 			]
-		);
-		let links = cur_entity_links.map((ent: EntityLink)=>ent.entity_link[0])
-		this.setEntity(cur_entity);
-		this.setLinks(links);
-		this.setState("done");
+			);
+			if (cur_entity) {
+				let links = cur_entity_links.map((ent: EntityLink)=>ent.entity_link[0])
+				this.setEntity(cur_entity);
+				this.setLinks(links);
+				this.setState("done");
+			} else {
+				this.setState("error");
+			}
+		} catch {
+			this.setState("error");
+		}
 	}
 
 	reloadLinksAction = () => {

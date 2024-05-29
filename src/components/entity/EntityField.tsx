@@ -26,7 +26,7 @@ export default function EntityField ({attribute} : Props) {
         <TextField
           size='small'
           type='date'
-          variant='standard'
+          variant='outlined'
           sx={{ m: 2 }}
           InputProps={ readOnly }
           helperText={rAttrLabel}
@@ -41,7 +41,7 @@ export default function EntityField ({attribute} : Props) {
       return (
         <TextField
           size='small'
-          variant='standard'
+          variant='outlined'
           sx={{ m: 2 }}
           helperText={rAttrLabel}
           defaultValue={entityAttrValue}
@@ -58,28 +58,30 @@ export default function EntityField ({attribute} : Props) {
           fullWidth
           maxRows={4}
           size='small'
-          variant='standard'
+          variant='outlined'
           sx={{ m: 2, maxWidth: "95%" }}
           helperText={rAttrLabel}
           defaultValue={entityAttrValue}
           InputProps={readOnly}
           name={rattrName}
+          onChange={(e)=>Entity.updateEntityAttribute(e.target.name, e.target.value)}
         />
       );
       break;
     case 'bool':
-      return <FormControlLabel control={<Checkbox defaultChecked={!!entityAttrValue} name={rattrName} disabled={readOnly.readOnly}/>} label={rAttrLabel} />
+      return <FormControlLabel control={<Checkbox defaultChecked={!!entityAttrValue} name={rattrName} onChange={(e)=>Entity.updateEntityAttribute(e.target.name, e.target.value)} disabled={readOnly.readOnly}/>} label={rAttrLabel} />
       break;
     default:
       return (
         <TextField
           size='small'
-          variant='standard'
+          variant='outlined'
           sx={{ m: 2 }}
           helperText={rAttrLabel}
           defaultValue={entityAttrValue}
           InputProps={readOnly}
           name={rattrName}
+          onChange={(e)=>Entity.updateEntityAttribute(e.target.name, e.target.value)}
         />
       );
       break;
