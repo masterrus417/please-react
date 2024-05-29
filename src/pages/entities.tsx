@@ -26,7 +26,7 @@ import {getFilter} from "../api/getFilters.tsx";
 import filterStore from "../stores/filter-store.tsx";
 import entitiesStore from "../stores/entities-store.ts";
 import paginationStore from "../stores/pagination-store.ts";
-
+import {addEntity} from "../api/addEntity.ts";
 
 
 // тип списка сущностей
@@ -38,7 +38,7 @@ type props = {
 const Entities:React.FC<props> = observer((props) => {
 
     // получение типа списка сущностей
-    const entityListType = props?.rentity_type_name;
+    const entityListType = props.rentity_type_name;
 
     // Данные для списка сущностей
     const {entities} = entitiesStore;
@@ -72,7 +72,7 @@ const Entities:React.FC<props> = observer((props) => {
     // Получение данных о сущностях для таблицы
     const getEntitiesData = async () => {
         entitiesStore.setLoading();
-        getEntities(props?.rentity_type_name)
+        getEntities(props.rentity_type_name)
             .then((entitiesData) => {
                 entitiesStore.setData(entitiesData);
             });
@@ -81,7 +81,7 @@ const Entities:React.FC<props> = observer((props) => {
 
     // Получение данных о фильтрах
     const getEntitiesFilterData = async () => {
-        getFilter(props?.rentity_type_name)
+        getFilter(props.rentity_type_name)
             .then((filterEntitiesData) => {
                 filterStore.setFilters(filterEntitiesData);
             })
@@ -99,7 +99,6 @@ const Entities:React.FC<props> = observer((props) => {
         filterStore.setOpenedFilter();
     }
 
-
     // закрытие диалога для фильтров
     const handleCloseDialog = () => {
         filterStore.setOpenedFilter();
@@ -107,18 +106,26 @@ const Entities:React.FC<props> = observer((props) => {
 
     // переход на форму для просмотра/редактирования сущности
     const handleEntityDetailsOpen = (id:number) => {
-        return navigate(`/${props?.rentity_type_name}/${id}`, {state: {type: props?.rentity_type_name, id: id}});
+        return navigate(`/${props.rentity_type_name}/${id}`, {state: {type: props.rentity_type_name, id: id}});
     }
 
     // переход на форму с этапами сущности
     const handleEntityStagesOpen = (id:number) => {
-        return navigate(`/${props?.rentity_type_name}/${id}/stage`, {state: {type: props?.rentity_type_name, id: id}});
+        return navigate(`/${props.rentity_type_name}/${id}/stage`, {state: {type: props.rentity_type_name, id: id}});
     }
 
     // переход на форму для добавления новой сущности
     const handleEntityNew = () => {
-        return navigate(`/${props?.rentity_type_name}/created`, {state: {type: props?.rentity_type_name}});
-    }
+        try {
+             addEntity(entityListType)
+                .then((id) => {
+                    return navigate(`/${props.rentity_type_name}/${id}`, {state: {type: props.rentity_type_name}})
+                });
+        } catch (error) {
+            console.error('Error: ', error);
+        }
+    };
+
 
     return (
     !loading ? (
@@ -132,10 +139,10 @@ const Entities:React.FC<props> = observer((props) => {
             <div>
                 <Dialog open={opened} onClose={handleCloseDialog} fullWidth>
                     <DialogTitle>Укажите необходимые данные для фильтрации</DialogTitle>
-                        {filters.map((item:any, index:number) => {
+                        {filters.map((item, index) => {
                             return (
                                 <DialogContent key={index}>
-                                    {item.rentity_filter_attr.map((item: any, index: number) => {
+                                    {item.rentity_filter_attr.map((item, index) => {
                                         return (
                                             <Grid item xs={12} key={index}>
                                                 <Typography>{item.rattr_label}</Typography>
@@ -172,37 +179,38 @@ const Entities:React.FC<props> = observer((props) => {
                 </div>
 
                 <div>
-                    <TableContainer style={{maxHeight: '80vh'}}>
+                    <TableContainer style={{maxHeight: '79vh'}}>
                         <Table stickyHeader>
                             <TableHead>
-                                {entities.map((item:any, index:number) => {
-                                        if (item.entity_id === 41 && entityListType === 'candidate') { // костыль, при одинаковых жсонах убрать условие полностью
-                                            return (
-                                                <TableRow key={index}>
-                                                    {item.entity_attr.map((item: any, index: number) => {
-                                                        if (item.rattr_view === true) {
-                                                            return (<TableCell key={index}>{item.rattr_label}</TableCell>)
-                                                        }
-                                                    })}
-                                                    <TableCell></TableCell>
-                                                    <TableCell></TableCell>
-                                                </TableRow>
-                                            )
-                                        } else if (item.entity_id === 86 && entityListType === 'request') { // костыль, при одинаковых жсонах убрать условие полностью
-                                            return (
-                                                <TableRow key={index}>
-                                                    {item.entity_attr.map((item: any, index: number) => {
-                                                        if (item.rattr_view === true) {
-                                                            return (<TableCell key={index}>{item.rattr_label}</TableCell>)
-                                                        }
-                                                    })}
-                                                    <TableCell></TableCell>
-                                                    <TableCell></TableCell>
-                                                </TableRow>
-                                            )
-                                        }
-
-                                    })}
+                                {entities.map((item, index) => {
+                                    if (item.entity_id === 41 && entityListType === 'candidate') { // костыль, при одинаковых жсонах убрать условие полностью
+                                        return (
+                                            <TableRow key={index}>
+                                                {item.entity_attr.map((item, index) => {
+                                                    if (item.rattr_view === true) {
+                                                        return (<TableCell key={index}>{item.rattr_label}</TableCell>)
+                                                    }
+                                                })}
+                                                <TableCell>Текущий этап</TableCell>
+                                                <TableCell></TableCell>
+                                                <TableCell></TableCell>
+                                            </TableRow>
+                                        )
+                                    } else if (item.entity_id === 53 && entityListType === 'request') { // костыль, при одинаковых жсонах убрать условие полностью
+                                        return (
+                                            <TableRow key={index}>
+                                                {item.entity_attr.map((item, index) => {
+                                                    if (item.rattr_view === true) {
+                                                        return (<TableCell key={index}>{item.rattr_label}</TableCell>)
+                                                    }
+                                                })}
+                                                <TableCell>Текущий этап</TableCell>
+                                                <TableCell></TableCell>
+                                                <TableCell></TableCell>
+                                            </TableRow>
+                                        )
+                                    }
+                                })}
 
                             </TableHead>
 
@@ -211,10 +219,10 @@ const Entities:React.FC<props> = observer((props) => {
                                     {(rowsPerPage > 0
                                             ? entities.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                             : entities
-                                        ).map((item:any, index:number) => (
+                                        ).map((item, index) => (
 
                                             <TableRow key={index}>
-                                                {item.entity_attr.map((item:any, index:number) => {
+                                                {item.entity_attr.map((item, index) => {
                                                     if (item.rattr_view === true) {
                                                         return (
                                                             <TableCell key={index}>{item.entity_attr_value}</TableCell>
@@ -222,14 +230,11 @@ const Entities:React.FC<props> = observer((props) => {
                                                     }
                                                 })}
 
-                                                {item.current_stage.map((item:any, index:number) => {
-                                                    if (true === true) {
-                                                        return (
-                                                            <TableCell key={index}>{item.entity_attr_value}</TableCell>
-                                                        )
-                                                    }
-                                                })}
-
+                                                <TableCell>
+                                                    {item.current_stage.map((item, index) => {
+                                                        return (<div key={index}>{item.rstage_label}</div>)
+                                                    })}
+                                                </TableCell>
                                                 <TableCell><Button onClick={() => handleEntityDetailsOpen(item.entity_id)}>Подробнее</Button></TableCell>
                                                 {(entityListType === 'candidate' && (<TableCell><Button onClick={() => handleEntityStagesOpen(item.entity_id)}>Этапы</Button></TableCell>))}
 
