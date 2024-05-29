@@ -6,6 +6,7 @@ import { getEntities } from '../api/getEntities';
 class EntitiesStore {
     entities: Entity[] = [];
     state: "loading"|"done"|"error"|"empty" = "empty";
+    loading: boolean = false;
 
     constructor() {
         makeAutoObservable(this);
@@ -22,10 +23,15 @@ class EntitiesStore {
 
     setData(newEntities: Entity[]) {
         this.entities = newEntities;
+        this.loading = false;
     }
 
     setState(state: "loading"|"done"|"error"|"empty") {
         this.state = state;
+    }
+
+    setLoading() {
+        this.loading = true;
     }
 }
 
