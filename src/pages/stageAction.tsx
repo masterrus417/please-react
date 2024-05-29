@@ -12,12 +12,6 @@ import {useLocation} from "react-router-dom";
 const stageAction: React.FC = observer(({}) => {
 
     const {state} = useLocation();
-    // const {Entity} = useStores();
-    // const {Entities} = useStores();
-    //
-    // const rEntityTypeName = state?.type;
-    // const entityID = state?.id;
-
 
     const [currentActions, setCurrentActions] =
         useState<StageActions[] | null>(null);
@@ -45,11 +39,6 @@ const stageAction: React.FC = observer(({}) => {
     useEffect(() => {
         getData();
     }, []);
-
-    // useEffect(()=>{
-    //     Entity.setLinksState("close");
-    //     Entity.getEntityAction(rEntityTypeName, entityID);
-    // },[state]);
 
     // JSX
     return (
