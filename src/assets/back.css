@@ -1,0 +1,18 @@
+.page404-container {
+  background-image: url("../assets/background.gif"); /* Замените на путь к вашему изображению для фона */
+  background-size: cover;
+  background-position: center;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.content {
+  text-align: center;
+}
+
+.gif {
+  max-width: 100%;
+  height: auto;
+}
