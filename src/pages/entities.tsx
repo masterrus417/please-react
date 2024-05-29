@@ -127,6 +127,7 @@ const Entities:React.FC<props> = observer((props) => {
         }
     };
 
+    // Применение введенного фильтра
     const handleFilterClick = () => {
         entitiesStore.setData(entities);
         // Устанавливаем значения фильтра перед применением
@@ -135,11 +136,13 @@ const Entities:React.FC<props> = observer((props) => {
         handleCloseDialog();
     }
 
+    // Сброс введенного фильтра
     const handleResetFilters = () => {
         filterStore.resetFilters();
         getEntitiesData();
     }
 
+    // Если это не загрузка данных и данные пустые, то выводим шапку страницы и подписываем что данных нет
     if (!loading && (!entities || entities.length === 0)) {
         return (
             <Paper style={{
@@ -199,6 +202,7 @@ const Entities:React.FC<props> = observer((props) => {
         )
     }
 
+    // В остальных случаях проверяем загрузку и рисуем данные, либо крутилку загрузки
     return (
         !loading ? (
             <Paper style={{

@@ -15,16 +15,12 @@ class FilterStore {
 	filterValue:string = '';
 	filterName:string = '';
 	filtered:boolean = false;
-	originalData: Entity[] = [];
 
     constructor() {
 		makeAutoObservable(this);
 		this.filterValue = '';
 	}
 
-	setOriginalData(data:Entity[]) {
-		this.originalData = data;
-	}
 
 	getFilterAction = (rentity_filter_name:string) => {
 		this.filter = fromPromise(getFilter(rentity_filter_name))
@@ -70,12 +66,9 @@ class FilterStore {
 
 	    // Метод для сброса фильтров
     resetFilters() {
-		// Возвращаем изначальные данные
-		this.filteredData = this.originalData;
 		// Сбрасываем значения фильтров
 		this.filterValue = '';
 		this.filterName = '';
-		// Устанавливаем флаг фильтрации в false
 		this.filtered = false;
     }
 
