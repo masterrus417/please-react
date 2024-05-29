@@ -26,6 +26,8 @@ import {getFilter} from "../api/getFilters.tsx";
 import filterStore from "../stores/filter-store.tsx";
 import entitiesStore from "../stores/entities-store.ts";
 import paginationStore from "../stores/pagination-store.ts";
+import {createEntity} from "../api/createEntity.tsx";
+import { Entity } from "../types/entity.ts";
 
 
 
@@ -108,17 +110,22 @@ const Entities:React.FC<props> = observer((props) => {
     // переход на форму для просмотра/редактирования сущности
     const handleEntityDetailsOpen = (id:number) => {
         // return navigate(`/${props?.rentity_type_name}/${id}`, {state: {type: props?.rentity_type_name, id: id}});
-            return navigate("/entity", {state: {type: "request", id: id}});
+        return navigate("/entity", {state: {type: "request", id: id}});
     }
 
     // переход на форму с этапами сущности
     const handleEntityStagesOpen = (id:number) => {
-        return navigate(`/${props?.rentity_type_name}/${id}/stage`, {state: {type: props?.rentity_type_name, id: id}});
+        // return navigate(`/${props?.rentity_type_name}/${id}/stage`, {state: {type: props?.rentity_type_name, id: id}});
+        return navigate("/stages", {state: {type: "request", id: id}});
+
     }
 
     // переход на форму для добавления новой сущности
     const handleEntityNew = () => {
-        return navigate(`/${props?.rentity_type_name}/created`, {state: {type: props?.rentity_type_name}});
+        createEntity(props?.rentity_type_name)
+            .then((r: Entity) => {
+               return navigate("/entity", {state: {type: "request", id: r.entity_id}});
+            });
     }
 
     return (
