@@ -1,5 +1,5 @@
 import { TextField, FormControlLabel, Checkbox } from '@mui/material';
-import { dateToMUI } from '../../utils/utils';
+import { dateToMUI, MUIToDate } from '../../utils/utils';
 import { useStores } from '../../context/root-store-general-context';
 import { EntityAttribute } from '../../api/getEntity';
 
@@ -26,13 +26,14 @@ export default function EntityField ({attribute} : Props) {
         <TextField
           size='small'
           type='date'
-          variant='standard'
+          variant='outlined'
           sx={{ m: 2 }}
           InputProps={ readOnly }
           helperText={rAttrLabel}
           defaultValue={dateToMUI(entityAttrValue)}
           name={rattrName}
           InputLabelProps={{ shrink: true }}
+          onChange={(e)=>Entity.updateEntityAttribute(e.target.name, MUIToDate(e.target.value))}
         />
       );
       break;
@@ -40,7 +41,7 @@ export default function EntityField ({attribute} : Props) {
       return (
         <TextField
           size='small'
-          variant='standard'
+          variant='outlined'
           sx={{ m: 2 }}
           helperText={rAttrLabel}
           defaultValue={entityAttrValue}
@@ -57,28 +58,30 @@ export default function EntityField ({attribute} : Props) {
           fullWidth
           maxRows={4}
           size='small'
-          variant='standard'
-          sx={{ m: 2 }}
+          variant='outlined'
+          sx={{ m: 2, maxWidth: "95%" }}
           helperText={rAttrLabel}
           defaultValue={entityAttrValue}
           InputProps={readOnly}
           name={rattrName}
+          onChange={(e)=>Entity.updateEntityAttribute(e.target.name, e.target.value)}
         />
       );
       break;
     case 'bool':
-      return <FormControlLabel control={<Checkbox defaultChecked={!!entityAttrValue} name={rattrName} disabled={readOnly.readOnly}/>} label={rAttrLabel} />
+      return <FormControlLabel control={<Checkbox defaultChecked={!!entityAttrValue} name={rattrName} onChange={(e)=>Entity.updateEntityAttribute(e.target.name, e.target.value)} disabled={readOnly.readOnly}/>} label={rAttrLabel} />
       break;
     default:
       return (
         <TextField
           size='small'
-          variant='standard'
+          variant='outlined'
           sx={{ m: 2 }}
           helperText={rAttrLabel}
           defaultValue={entityAttrValue}
           InputProps={readOnly}
           name={rattrName}
+          onChange={(e)=>Entity.updateEntityAttribute(e.target.name, e.target.value)}
         />
       );
       break;

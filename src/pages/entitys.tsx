@@ -6,7 +6,7 @@ const Entitys:React.FC = () => {
     const navigate = useNavigate();
 
     function openEntity() {
-        return navigate("/entity", {state: {type: "candidate", id: 83}});
+        return navigate("/entity", {state: {type: "request", id: 40}});
     };
 
     return(

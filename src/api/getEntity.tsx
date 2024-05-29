@@ -1,5 +1,4 @@
-import axios from "axios";
-import { axiosConfig } from "./config";
+import axiosInstance from "./axiosConfig";
 
 export type EntityAttribute = {
   entity_attr_id: number,
@@ -31,16 +30,5 @@ export type Entity = {
 	entity_attr: EntityAttribute[]
 };
 
-export async function getEntity(entityType: string, entityID: number) {
-
-  try {
-    const response = await axios.get(`/entity/${entityType}/${entityID}`, axiosConfig);
-    if (response.status == 200){
-      return response.data[0];
-    } else {
-      throw new Error("Error");
-    }
-  } catch (error) {
-    console.error(error);
-  };
-};
+export const getEntity = async (entityID: number) =>
+  (await axiosInstance.get(`api/v1/entity/${entityID}`)).data[0]
