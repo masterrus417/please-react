@@ -27,6 +27,7 @@ import filterStore from "../stores/filter-store.tsx";
 import entitiesStore from "../stores/entities-store.ts";
 import paginationStore from "../stores/pagination-store.ts";
 import {addEntity} from "../api/addEntity.ts";
+import Loader from "../components/load.tsx";
 
 
 // тип списка сущностей
@@ -47,8 +48,8 @@ const Entities:React.FC<props> = observer((props) => {
     const {loading} = entitiesStore;
 
     // Данные для фильтров
-    const {filters} = filterStore;
-    const {opened} = filterStore;
+    const { filters,
+            opened,} = filterStore;
 
     // Данные для пагинации
     const {page} = paginationStore;
@@ -75,7 +76,7 @@ const Entities:React.FC<props> = observer((props) => {
         getEntities(props.rentity_type_name)
             .then((entitiesData) => {
                 entitiesStore.setData(entitiesData);
-            });
+            })
         paginationStore.setPage(0);
     }
 
@@ -126,155 +127,215 @@ const Entities:React.FC<props> = observer((props) => {
         }
     };
 
+    const handleFilterClick = () => {
+        entitiesStore.setData(entities);
+        // Устанавливаем значения фильтра перед применением
+        filterStore.setFilterData(entities);
+        entitiesStore.setData(filterStore.filteredData);
+        handleCloseDialog();
+    }
+
+    const handleResetFilters = () => {
+        filterStore.resetFilters();
+        getEntitiesData();
+    }
+
+    if (!loading && (!entities || entities.length === 0)) {
+        return (
+            <Paper style={{
+                width: 'calc(100% - 16px)',
+                marginLeft: '8px',
+                marginRight: '8px',
+                marginTop: '8px',
+                marginBottom: '8px',
+            }}>
+                <div>
+                    <Dialog open={opened} onClose={handleCloseDialog} fullWidth>
+                        <DialogTitle>Укажите необходимые данные для фильтрации</DialogTitle>
+                            {filters.map((item, index) => {
+                                return (
+                                    <DialogContent key={index}>
+                                        {item.rentity_filter_attr.map((item, index) => {
+                                            return (
+                                                <Grid item xs={12} key={index}>
+                                                    <Typography>{item.rattr_label}</Typography>
+                                                    <TextField
+                                                        className={item.rattr_name} id={item.rattr_name}
+                                                        fullWidth={true} size={"small"}
+                                                        key={item.rattr_id}
+                                                        onChange={(e) => filterStore.setFilterValue(e.target.value, e.target.id)}
+                                                    ></TextField>
+                                                </Grid>
+                                        )
+                                        })}
+                                    </DialogContent>
+                                )
+                            })}
+                        <DialogActions>
+                            <Button color="success" variant="contained" onClick={handleFilterClick}>Применить фильтрацию</Button>
+                            <Button color="error" variant="contained" onClick={handleCloseDialog}>Отменить</Button>
+                        </DialogActions>
+                    </Dialog>
+
+                    <div style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        padding: '10px',
+                    }}>
+                        <div>
+                            <Button onClick={handleOpenDialog}>Фильтрация</Button>
+                            <Button onClick={handleResetFilters}>Сбросить фильтры</Button>
+                        </div>
+                        <Button variant="contained"
+                                color="primary"
+                                style={{marginLeft: 'auto'}}
+                                onClick={handleEntityNew}>
+                            Добавить
+                        </Button>
+                    </div>
+                    <Typography style={{paddingLeft: '10px', fontSize: '1.1rem'}}>Данные отсутствуют =(</Typography>
+                </div>
+            </Paper>
+        )
+    }
 
     return (
-    !loading ? (
-        <Paper style={{
-            width: 'calc(100% - 16px)',
-            marginLeft: '8px',
-            marginRight: '8px',
-            marginTop: '8px',
-            marginBottom: '8px',
-        }}>
-            <div>
-                <Dialog open={opened} onClose={handleCloseDialog} fullWidth>
-                    <DialogTitle>Укажите необходимые данные для фильтрации</DialogTitle>
-                        {filters.map((item, index) => {
-                            return (
-                                <DialogContent key={index}>
-                                    {item.rentity_filter_attr.map((item, index) => {
-                                        return (
-                                            <Grid item xs={12} key={index}>
-                                                <Typography>{item.rattr_label}</Typography>
-                                                <TextField className={item.rattr_name} id={item.rattr_name}
-                                                           fullWidth={true} size={"small"}
-                                                           key={item.rattr_id}></TextField>
-                                            </Grid>
-                                    )
-                                    })}
-                                </DialogContent>
-                            )
-                        })}
-                    <DialogActions>
-                        <Button color="success" variant="contained">Применить фильтрацию</Button>
-                        <Button color="error" variant="contained" onClick={handleCloseDialog}>Отменить</Button>
-                    </DialogActions>
-                </Dialog>
-
-                <div style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    padding: '10px',
-                }}>
-                    <div>
-                        <Button onClick={handleOpenDialog}>Фильтрация</Button>
-                        <Button>Сбросить фильтры</Button>
-                    </div>
-                    <Button variant="contained"
-                            color="primary"
-                            style={{marginLeft: 'auto'}}
-                            onClick={handleEntityNew}>
-                        Добавить
-                    </Button>
-                </div>
-
+        !loading ? (
+            <Paper style={{
+                width: 'calc(100% - 16px)',
+                marginLeft: '8px',
+                marginRight: '8px',
+                marginTop: '8px',
+                marginBottom: '8px',
+            }}>
                 <div>
-                    <TableContainer style={{maxHeight: '79vh'}}>
-                        <Table stickyHeader>
-                            <TableHead>
-                                {entities.map((item, index) => {
-                                    if (item.entity_id === 41 && entityListType === 'candidate') { // костыль, при одинаковых жсонах убрать условие полностью
-                                        return (
-                                            <TableRow key={index}>
-                                                {item.entity_attr.map((item, index) => {
-                                                    if (item.rattr_view === true) {
-                                                        return (<TableCell key={index}>{item.rattr_label}</TableCell>)
-                                                    }
-                                                })}
-                                                <TableCell>Текущий этап</TableCell>
-                                                <TableCell></TableCell>
-                                                <TableCell></TableCell>
-                                            </TableRow>
+                    <Dialog open={opened} onClose={handleCloseDialog} fullWidth>
+                        <DialogTitle>Укажите необходимые данные для фильтрации</DialogTitle>
+                            {filters.map((item, index) => {
+                                return (
+                                    <DialogContent key={index}>
+                                        {item.rentity_filter_attr.map((item, index) => {
+                                            return (
+                                                <Grid item xs={12} key={index}>
+                                                    <Typography>{item.rattr_label}</Typography>
+                                                    <TextField
+                                                        className={item.rattr_name} id={item.rattr_name}
+                                                        fullWidth={true} size={"small"}
+                                                        key={item.rattr_id}
+                                                        onChange={(e) => filterStore.setFilterValue(e.target.value, e.target.id)}
+                                                    ></TextField>
+                                                </Grid>
                                         )
-                                    } else if (item.entity_id === 53 && entityListType === 'request') { // костыль, при одинаковых жсонах убрать условие полностью
-                                        return (
-                                            <TableRow key={index}>
-                                                {item.entity_attr.map((item, index) => {
-                                                    if (item.rattr_view === true) {
-                                                        return (<TableCell key={index}>{item.rattr_label}</TableCell>)
-                                                    }
-                                                })}
-                                                <TableCell>Текущий этап</TableCell>
-                                                <TableCell></TableCell>
-                                                <TableCell></TableCell>
-                                            </TableRow>
-                                        )
-                                    }
-                                })}
+                                        })}
+                                    </DialogContent>
+                                )
+                            })}
+                        <DialogActions>
+                            <Button color="success" variant="contained" onClick={handleFilterClick}>Применить фильтрацию</Button>
+                            <Button color="error" variant="contained" onClick={handleCloseDialog}>Отменить</Button>
+                        </DialogActions>
+                    </Dialog>
 
-                            </TableHead>
+                    <div style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        padding: '10px',
+                    }}>
+                        <div>
+                            <Button onClick={handleOpenDialog}>Фильтрация</Button>
+                            <Button onClick={handleResetFilters}>Сбросить фильтры</Button>
+                        </div>
+                        <Button variant="contained"
+                                color="primary"
+                                style={{marginLeft: 'auto'}}
+                                onClick={handleEntityNew}>
+                            Добавить
+                        </Button>
+                    </div>
 
-                            <TableBody>
+                    <div>
+                        <TableContainer style={{maxHeight: '79vh'}}>
+                            <Table stickyHeader>
+                                <TableHead>
 
-                                    {(rowsPerPage > 0
-                                            ? entities.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                                            : entities
-                                        ).map((item, index) => (
+                                    <TableRow>
+                                        {entities[0].entity_attr.map((item, index) => {
+                                            if (item.rattr_view === true) {
+                                                return (<TableCell style={{fontSize: '1rem'}} key={index}>{item.rattr_label}</TableCell>)
+                                            }
+                                        })}
+                                        <TableCell style={{fontSize: '1rem'}}>Текущий этап</TableCell>
+                                        <TableCell></TableCell>
+                                        <TableCell></TableCell>
+                                    </TableRow>
 
-                                            <TableRow key={index}>
-                                                {item.entity_attr.map((item, index) => {
-                                                    if (item.rattr_view === true) {
-                                                        return (
-                                                            <TableCell key={index}>{item.entity_attr_value}</TableCell>
-                                                        )
-                                                    }
-                                                })}
+                                </TableHead>
 
-                                                <TableCell>
-                                                    {item.current_stage.map((item, index) => {
-                                                        return (<div key={index}>{item.rstage_label}</div>)
+                                <TableBody>
+
+                                        {(rowsPerPage > 0
+                                                ? entities.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                                                : entities
+                                            ).map((item, index) => (
+
+                                                <TableRow key={index}>
+                                                    {item.entity_attr.map((item, index) => {
+                                                        if (item.rattr_view === true) {
+                                                            return (
+                                                                <TableCell key={index}>{item.entity_attr_value}</TableCell>
+                                                            )
+                                                        }
                                                     })}
-                                                </TableCell>
-                                                <TableCell><Button onClick={() => handleEntityDetailsOpen(item.entity_id)}>Подробнее</Button></TableCell>
-                                                {(entityListType === 'candidate' && (<TableCell><Button onClick={() => handleEntityStagesOpen(item.entity_id)}>Этапы</Button></TableCell>))}
 
-                                            </TableRow>
-                                        ))}
+                                                    <TableCell>
+                                                        {item.current_stage.map((item, index) => {
+                                                            return (<div key={index}>{item.rstage_label}</div>)
+                                                        })}
+                                                    </TableCell>
+                                                    <TableCell><Button onClick={() => handleEntityDetailsOpen(item.entity_id)}>Подробнее</Button></TableCell>
+                                                    {(entityListType === 'candidate' && (<TableCell><Button onClick={() => handleEntityStagesOpen(item.entity_id)}>Этапы</Button></TableCell>))}
 
+                                                </TableRow>
+                                            ))}
+
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
+                    </div>
+
+                    <div style={{
+                        height: '5vh',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        borderBottom: 'none',
+                    }}>
+                        <Table>
+                            <TableBody>
+                                <TableRow>
+                                    {entities.length > 0 && (
+                                        <TablePagination
+                                            rowsPerPageOptions={rowsPerPageOptions}
+                                            colSpan={4}
+                                            count={entities.length}
+                                            rowsPerPage={rowsPerPage}
+                                            page={page}
+                                            onPageChange={handleChangePage}
+                                            onRowsPerPageChange={handleChangeRowsPerPage}
+                                            labelRowsPerPage="Количество строк" // Меняет "Rows per page" на кастомный
+                                            labelDisplayedRows={({ from, to, count}) => `Строки ${from} - ${to} из ${count}`}   // штука меняет дефолтный бар "1-10 of 20" на кастомный, можно даже изменить наполненность
+                                        />
+                                    )}
+                                </TableRow>
                             </TableBody>
                         </Table>
-                    </TableContainer>
+                    </div>
                 </div>
-
-                <div style={{
-                    height: '5vh',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    borderBottom: 'none',
-                }}>
-                    <Table>
-                        <TableBody>
-                            <TableRow>
-                                {entities.length > 0 && (
-                                    <TablePagination
-                                        rowsPerPageOptions={rowsPerPageOptions}
-                                        colSpan={4}
-                                        count={entities.length}
-                                        rowsPerPage={rowsPerPage}
-                                        page={page}
-                                        onPageChange={handleChangePage}
-                                        onRowsPerPageChange={handleChangeRowsPerPage}
-                                        labelRowsPerPage="Количество строк" // Меняет "Rows per page" на кастомный
-                                        labelDisplayedRows={({ from, to, count}) => `Строки ${from} - ${to} из ${count}`}   // штука меняет дефолтный бар "1-10 of 20" на кастомный, можно даже изменить наполненность
-                                    />
-                                )}
-                            </TableRow>
-                        </TableBody>
-                    </Table>
-                </div>
-            </div>
-        </Paper>
-    ) : null
+            </Paper>
+        ) : (
+            <Paper>
+                {Loader(null, null)}
+            </Paper>
+        )
     );
 });
 

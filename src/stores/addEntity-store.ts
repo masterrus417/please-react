@@ -11,7 +11,6 @@ class AddEntity {
     }
 
     setNewEntity(data:Entity[]) {
-        console.log(data);
         data.map((item) => {this.newEntityID = item.entity_id});
         return this.newEntityID;
     }

@@ -39,7 +39,6 @@ export type Entity = {
 };
 
 
-
 class EntitiesStore {
     entities:Entity[] = [];
     loading: boolean = false;
