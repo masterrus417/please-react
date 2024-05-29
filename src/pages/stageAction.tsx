@@ -17,7 +17,7 @@ const stageAction: React.FC = observer(({}) => {
     const [currentActions, setCurrentActions] =
         useState<StageActions[] | null>(null);
     const [currentEntity, setCurrentEntity] =
-        useState<Entity | null>(null);
+        useState<Entity | null>(null)
     const [checkboxes, setCheckboxes] =
         useState<Entity[] | null>(null);
     const [error, setError] =
