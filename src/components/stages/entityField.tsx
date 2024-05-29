@@ -9,9 +9,10 @@ import {EntityAttribute} from "../../types/entity.ts";
 // Пропсы для компонента ActionButton
 interface EntityFieldProps {
     attribute: EntityAttribute;
+    action: (attr: EntityAttribute) => void;
 }
 
-const EntityField: React.FC<EntityFieldProps> = ({attribute}) => {
+const EntityField: React.FC<EntityFieldProps> = ({attribute, action}) => {
     const rAttrLabel = attribute?.rattr_label;
     const rAttrType = attribute?.rattr_type;
     const entityAttrValue = attribute?.entity_attr_value;
@@ -58,9 +59,31 @@ const EntityField: React.FC<EntityFieldProps> = ({attribute}) => {
             );
             break;
         case 'bool':
-            return <FormControlLabel control={<Checkbox defaultChecked={entityAttrValue == true} name={rattrName}/>}
-                                     label={rAttrLabel}/>
+            return(
+                <FormControlLabel
+                    control={
+                        <Checkbox
+                            defaultChecked={entityAttrValue === "true"}
+                            name={rattrName}
+                            onClick={() => action(attribute)}
+                        />
+                    }
+                    label={rAttrLabel}
+                />)
             break;
+        default:
+            return (
+                <TextField
+                    multiline
+                    fullWidth
+                    maxRows={4}
+                    variant='outlined'
+                    label={rAttrLabel}
+                    defaultValue={entityAttrValue}
+                    disabled={true}
+                    name={rattrName}
+                />
+            );
     }
 };
 

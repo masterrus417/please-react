@@ -17,6 +17,7 @@ interface AvailableAction {
 interface StageActions {
     entity_stage_id: number;
     entity_id: number;
+    entity_stage_entity_id: number;
     rstage_name: string;
     rstage_label: string;
     available_actions: AvailableAction[];
