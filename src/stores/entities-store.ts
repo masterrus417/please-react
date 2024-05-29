@@ -35,6 +35,6 @@ class EntitiesStore {
     }
 }
 
-const entitiesStore = new EntitiesStore()
+const entitiesStore = new EntitiesStore();
 
 export default entitiesStore

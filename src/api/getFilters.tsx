@@ -23,5 +23,5 @@ export type Filter = {
 
 
 export const getFilter = async (entityType:string) =>
-	(await axiosInstance.get<Filter[]>(`v1/filter/${entityType}_list`)).data;
+	(await axiosInstance.get<Filter[]>(`api/v1/filter/${entityType}_list`)).data;
 

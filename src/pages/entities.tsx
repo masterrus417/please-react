@@ -107,7 +107,8 @@ const Entities:React.FC<props> = observer((props) => {
 
     // переход на форму для просмотра/редактирования сущности
     const handleEntityDetailsOpen = (id:number) => {
-        return navigate(`/${props?.rentity_type_name}/${id}`, {state: {type: props?.rentity_type_name, id: id}});
+        // return navigate(`/${props?.rentity_type_name}/${id}`, {state: {type: props?.rentity_type_name, id: id}});
+            return navigate("/entity", {state: {type: "request", id: id}});
     }
 
     // переход на форму с этапами сущности

@@ -10,4 +10,4 @@ interface ExampleData{
 
 //Функции примеры
 export const getExportData = async (id:number) =>
-	(await axiosInstance.get<ExampleData[]>(`v1/entity/${id}`)).data;
+	(await axiosInstance.get<ExampleData[]>(`api/v1/entity/${id}`)).data;
