@@ -1,5 +1,5 @@
 import { makeAutoObservable } from 'mobx';
-import { Entity } from '../api/getEntity';
+import { Entity } from '../api/getEntities';
 import { getEntities } from '../api/getEntities';
 
 

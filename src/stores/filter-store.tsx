@@ -1,7 +1,7 @@
 import {makeAutoObservable} from 'mobx';
 
 import { Filter, getFilter } from '../api/getFilters';
-import {Entity} from "../stores/entities-store.ts";
+import {Entity} from "../api/getEntities";
 import { fromPromise, IPromiseBasedObservable } from 'mobx-utils';
 
 

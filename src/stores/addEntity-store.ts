@@ -1,5 +1,5 @@
 import { makeAutoObservable } from 'mobx';
-import {Entity} from "./entities-store.ts";
+import {Entity} from "../api/getEntity.tsx";
 
 
 

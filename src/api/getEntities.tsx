@@ -17,19 +17,27 @@ export type EntityAttribute = {
   read_only: boolean
 };
 
+export type EntityStage = {
+  entity_stage_id: number;
+  entity_id: number;
+  rstage_name: string;
+  rstage_label: string;
+};
+
 export type Entity = {
   entity_id: number,
   rentity_type_name: string,
   rentity_type_label: string,
-  current_stage: string[],
+  current_stage: EntityStage[],
   ts_deleted: string,
   user_deleted: string,
   chatroom_uuid: string,
   ts_created: string,
   user_created: string,
   rentity_type: number,
-	entity_attr: EntityAttribute[]
+  entity_attr: EntityAttribute[]
 };
+
 
 
 

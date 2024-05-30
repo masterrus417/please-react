@@ -20,14 +20,13 @@ export type Entity = {
   entity_id: number,
   rentity_type_name: string,
   rentity_type_label: string,
-  current_stage: string[],
   ts_deleted: string,
   user_deleted: string,
   chatroom_uuid: string,
   ts_created: string,
   user_created: string,
   rentity_type: number,
-	entity_attr: EntityAttribute[]
+  entity_attr: EntityAttribute[]
 };
 
 export const getEntity = async (entityID: number) =>

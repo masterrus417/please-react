@@ -24,7 +24,7 @@ import {
 import {getEntities} from "../api/getEntities.tsx";
 import {getFilter} from "../api/getFilters.tsx";
 import { createEntity } from "../api/createEntity.tsx";
-import { Entity } from "../types/entity.ts";
+import { Entity } from "../api/getEntities";
 import filterStore from "../stores/filter-store.tsx";
 import entitiesStore from "../stores/entities-store.ts";
 import paginationStore from "../stores/pagination-store.ts";
@@ -292,7 +292,8 @@ const Entities:React.FC<props> = observer((props) => {
 
                                             <TableCell>
                                                 {item.current_stage.map((item, index) => {
-                                                    return (<div key={index}>{item.rstage_label}</div>)
+                                                    console.log(item)
+                                                    return (<div key={index}>{item.rstage_label ?? ""}</div>)
                                                 })}
                                             </TableCell>
                                             <TableCell><Button onClick={() => handleEntityDetailsOpen(item.entity_id)}>Подробнее</Button></TableCell>
