@@ -12,14 +12,14 @@ class EntitiesStore {
         makeAutoObservable(this);
     }
 
-	getEntitiesAction = async (entityType: string) => {
-		this.setState("loading");
-		getEntities(entityType)
+    getEntitiesAction = async (entityType: string) => {
+        this.setState("loading");
+        getEntities(entityType)
             .then((data)=>{
                 this.setData(data);
                 this.setState("done");
             })
-        }
+    }
 
     setData(newEntities: Entity[]) {
         this.entities = newEntities;
