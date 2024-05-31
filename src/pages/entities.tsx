@@ -109,7 +109,7 @@ const Entities:React.FC<props> = observer((props) => {
 
     // переход на форму для просмотра/редактирования сущности
     const handleEntityDetailsOpen = (id: number) => {
-        return navigate("/entity", { state: { type: "request", id: id } });
+	return navigate("/entity", { state: { type: "request", id: id } });
     }
 
     // переход на форму с этапами сущности
@@ -292,7 +292,6 @@ const Entities:React.FC<props> = observer((props) => {
 
                                             <TableCell>
                                                 {item.current_stage.map((item, index) => {
-                                                    console.log(item)
                                                     return (<div key={index}>{item.rstage_label ?? ""}</div>)
                                                 })}
                                             </TableCell>

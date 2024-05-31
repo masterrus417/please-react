@@ -27,7 +27,7 @@ const EntityField: React.FC<EntityFieldProps> = ({attribute, action}) => {
                     fullWidth
                     disabled={true}
                     label={rAttrLabel}
-                    defaultValue={entityAttrValue !== '' ? dateToMUI(entityAttrValue) : 'Отсутствует'}
+                    defaultValue={entityAttrValue !== '' ? dateToMUI(entityAttrValue ?? '01.01.2000') : 'Отсутствует'}
                     name={rattrName}
                 />
             );

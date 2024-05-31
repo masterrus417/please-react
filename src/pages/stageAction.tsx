@@ -30,11 +30,13 @@ const stageAction: React.FC = observer(({}) => {
         setCurrentActions(actions);
         const fields: Entity[] = [];
         for (let action of actions) {
-            await getEntityByID(action.entity_stage_entity_id).then((r: Entity[]) => {
-                for (let x of r) {
-                    fields.push(x);
-                }
-            });
+            if (action.entity_stage_entity_id != null) {
+                await getEntityByID(action.entity_stage_entity_id).then((r: Entity[]) => {
+                    for (let x of r) {
+                        fields.push(x);
+                    }
+                });
+            }
         }
         setCheckboxes(fields);
     };

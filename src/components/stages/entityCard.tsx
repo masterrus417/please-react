@@ -28,7 +28,6 @@ const EntityCard: React.FC<EntityCardProps> = ({entity, actions, checkboxes, get
                     entity_attr_value: attr.entity_attr_value == 'true' ? 'false' : 'true'
                 }
         );
-        console.log(newEntity);
         updateEntity(newEntity).then((r) => console.log(r));
     };
 

@@ -10,13 +10,19 @@ interface ActionButtonProps {
 }
 
 const ActionButton: React.FC<ActionButtonProps> = ({action, stageID, getData}) => {
-    return(
+    return (
         <Button
             variant={'contained'}
             fullWidth
             onClick={async () => {
-               await doActionOnStage(stageID, action.raction_id);
-               await getData();
+                await doActionOnStage(stageID, action.raction_id)
+                    .then(response => {
+                        if (response.status === 200) {
+                            getData();
+                        } else {
+                            console.error('Failed to perform action. Status:', response.status);
+                        }
+                    });
             }}
         >
             {action.raction_label}
